@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Приглашение на свадьбу Алины и Максима</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Marck+Script&family=Roboto:wght@300;400&display=swap');
         
@@ -20,14 +19,17 @@
             color: #4a3c3c;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             padding: 30px;
             position: relative;
@@ -92,12 +94,13 @@
             margin: 15px;
             flex: 1;
             min-width: 300px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .detail-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
         
         .detail-card h3 {
@@ -105,6 +108,8 @@
             color: #a76d60;
             margin-bottom: 15px;
             font-size: 1.5rem;
+            border-bottom: 1px solid #f0e0e0;
+            padding-bottom: 10px;
         }
         
         .address {
@@ -113,6 +118,7 @@
             background: #f8f0f0;
             border-radius: 8px;
             font-style: italic;
+            line-height: 1.6;
         }
         
         .notes {
@@ -121,118 +127,102 @@
             border-radius: 10px;
             margin: 30px 0;
             animation: fadeIn 2s ease;
+            border-left: 4px solid #d4a8a0;
         }
         
         .notes h3 {
             font-family: 'Playfair Display', serif;
             color: #a76d60;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notes h3::before {
+            content: "💫";
+            margin-right: 10px;
+        }
+        
+        .notes p {
+            margin: 12px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .notes p::before {
+            content: "•";
+            margin-right: 8px;
+            color: #a76d60;
+            font-weight: bold;
         }
         
         .guest-selector {
             margin: 30px 0;
             text-align: center;
             animation: fadeIn 2s ease;
+            padding: 20px;
+            background: linear-gradient(to right, #fdf5f5, #faf0f0);
+            border-radius: 10px;
         }
         
-        .search-container {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-            max-width: 500px;
+        .guest-selector h3 {
+            font-family: 'Playfair Display', serif;
+            color: #a76d60;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
         
-        #guest-search {
-            padding: 12px 20px;
-            border: 1px solid #d4a8a0;
-            border-radius: 8px;
-            font-size: 1rem;
+        select {
+            padding: 14px 25px;
+            border: 2px solid #d4a8a0;
+            border-radius: 10px;
+            font-size: 1.1rem;
             background: white;
             color: #4a3c3c;
             width: 100%;
+            max-width: 400px;
             outline: none;
             transition: all 0.3s ease;
-        }
-        
-        #guest-search:focus {
-            border-color: #a76d60;
-            box-shadow: 0 0 0 2px rgba(167, 109, 96, 0.2);
-        }
-        
-        #search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-            z-index: 10;
-        }
-        
-        .search-result-item {
-            padding: 10px 20px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a76d60' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
         }
         
-        .search-result-item:hover {
-            background: #f8f0f0;
+        select:focus {
+            border-color: #a76d60;
+            box-shadow: 0 0 0 3px rgba(167, 109, 96, 0.2);
         }
         
         .invitation-preview {
             background: white;
-            padding: 40px;
+            padding: 50px 40px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
             margin: 30px auto;
-            max-width: 600px;
+            max-width: 700px;
             text-align: center;
             display: none;
-            animation: scaleIn 0.5s ease;
+            animation: scaleIn 0.7s ease;
             position: relative;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23d4a8a0" opacity="0.2" d="M15,15 h70 v70 h-70 z M0,0 L100,100 M100,0 L0,100"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23d4a8a0" opacity="0.1" d="M15,15 h70 v70 h-70 z M0,0 L100,100 M100,0 L0,100"/></svg>');
+            border: 1px solid #f0e0e0;
         }
         
         .invitation-preview h3 {
             font-family: 'Marck Script', cursive;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
             color: #a76d60;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        .confirmation-form {
-            margin-top: 20px;
-        }
-        
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d4a8a0;
-            border-radius: 8px;
-            resize: vertical;
-            min-height: 100px;
-            margin-bottom: 15px;
-            font-family: 'Roboto', sans-serif;
-        }
-        
-        .save-btn, .confirm-btn {
-            background: #a76d60;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .save-btn:hover, .confirm-btn:hover {
-            background: #8c5b50;
+        .invitation-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
         }
         
         .floral-decoration {
@@ -255,6 +245,14 @@
             right: 0;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23a76d60" d="M50,0 C60,20 80,30 100,50 C80,60 60,80 50,100 C40,80 20,60 0,50 C20,30 40,20 50,0 Z"/></svg>') no-repeat;
             background-size: contain;
+            transform: rotate(180deg);
+        }
+        
+        .heart-divider {
+            font-size: 2rem;
+            color: #d4a8a0;
+            margin: 20px 0;
+            display: block;
         }
         
         footer {
@@ -263,19 +261,7 @@
             padding: 20px;
             color: #7c5c5c;
             font-size: 0.9rem;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background: #4caf50;
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
+            border-top: 1px solid #f0e0e0;
         }
         
         /* Анимации */
@@ -296,7 +282,7 @@
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
         
@@ -312,6 +298,15 @@
             
             .detail-card {
                 min-width: 100%;
+                margin: 10px 0;
+            }
+            
+            .invitation-preview {
+                padding: 30px 20px;
+            }
+            
+            .invitation-preview h3 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -357,31 +352,50 @@
         
         <div class="notes">
             <h3>Важная информация</h3>
-            <p>➤ Пожалуйста, прихватите с собой теплую одежду, так как на территории есть мангальная зона на улице.</p>
-            <p>➤ Для желающих посетить баню - возьмите с собой все необходимое.</p>
-            <p>➤ На столе будет основной алкоголь (крепкий). Слабоалкогольные напитки каждый может взять по своему вкусу без ограничений.</p>
+            <p>Пожалуйста, прихватите с собой теплую одежду, так как на территории есть мангальная зона на улице.</p>
+            <p>Для желающих посетить баню - возьмите с собой все необходимое.</p>
+            <p>На столе будет основной алкоголь (крепкий). Слабоалкогольные напитки каждый может взять по своему вкусу без ограничений.</p>
         </div>
         
         <div class="guest-selector">
-            <h3>Найдите себя в списке гостей</h3>
-            <div class="search-container">
-                <input type="text" id="guest-search" placeholder="Начните вводить ваше имя...">
-                <div id="search-results"></div>
-            </div>
+            <h3>Выберите гостя из списка</h3>
+            <select id="guest-select">
+                <option value="">-- Выберите гостя --</option>
+                <option value="Дмитрий">Дмитрий</option>
+                <option value="Мария">Мария</option>
+                <option value="Александр">Александр</option>
+                <option value="Александр и Елизавета">Александр и Елизавета</option>
+                <option value="Алексей и Анастасия">Алексей и Анастасия</option>
+                <option value="Сергей и Мария">Сергей и Мария</option>
+                <option value="Максим и Анна">Максим и Анна</option>
+                <option value="Антон и Татьяна">Антон и Татьяна</option>
+                <option value="Дмитрий и Маргарита">Дмитрий и Маргарита</option>
+                <option value="Екатерина">Екатерина</option>
+            </select>
         </div>
         
         <div class="invitation-preview" id="invitation-preview">
             <h3>Персональное приглашение</h3>
-            <p>Дорогой(ая) <span id="guest-name"></span>!</p>
-            <p>Мы будем счастливы видеть вас на нашей свадьбе</p>
-            <p>25 октября 2025 года</p>
-            <p>Церемония: Октябрьский отдел ЗАГС, Гожувская ул., 40 в 10:00</p>
-            <p>Банкет: Гостевой домик «Это база», Октябрьская ул., 17, р.п. Луховка в 15:00</p>
             
-            <div class="confirmation-form">
-                <textarea id="wishes" placeholder="Ваши пожелания молодоженам..."></textarea>
-                <button class="confirm-btn" id="confirm-btn">Я приду!</button>
-                <button class="save-btn" onclick="saveInvitation()">Сохранить приглашение</button>
+            <div class="invitation-content">
+                <p>Дорогой(ая) <strong><span id="guest-name"></span></strong>!</p>
+                
+                <span class="heart-divider">❤</span>
+                
+                <p>Мы будем счастливы видеть вас на нашей свадьбе</p>
+                <p>25 октября 2025 года</p>
+                
+                <span class="heart-divider">❤</span>
+                
+                <p><strong>Церемония:</strong><br>Октябрьский отдел ЗАГС<br>Гожувская ул., 40<br>в 10:00</p>
+                
+                <span class="heart-divider">❤</span>
+                
+                <p><strong>Банкет:</strong><br>Гостевой домик «Это база»<br>Октябрьская ул., 17, р.п. Луховка<br>в 15:00</p>
+                
+                <span class="heart-divider">❤</span>
+                
+                <p>С любовью,<br>Алина и Максим</p>
             </div>
         </div>
         
@@ -390,159 +404,21 @@
         </footer>
     </div>
 
-    <div class="notification" id="notification">
-        Ваш ответ успешно отправлен!
-    </div>
-
     <script>
-        // Список гостей (одиночные и пары)
-        const guests = [
-            "Дмитрий",
-            "Мария", 
-            "Александр",
-            "Александр и Елизавета",
-            "Алексей и Анастасия",
-            "Сергей и Мария",
-            "Максим и Анна",
-            "Антон и Татьяна",
-            "Дмитрий и Маргарита",
-            "Екатерина"
-        ];
-        
-        // Элементы DOM
-        const guestSearch = document.getElementById('guest-search');
-        const searchResults = document.getElementById('search-results');
-        const invitationPreview = document.getElementById('invitation-preview');
-        const guestName = document.getElementById('guest-name');
-        const confirmBtn = document.getElementById('confirm-btn');
-        const notification = document.getElementById('notification');
-        
-        // Поиск гостей
-        guestSearch.addEventListener('input', function() {
-            const searchText = this.value.toLowerCase();
-            searchResults.innerHTML = '';
-            
-            if (searchText.length < 2) {
-                searchResults.style.display = 'none';
-                return;
-            }
-            
-            const filteredGuests = guests.filter(guest => 
-                guest.toLowerCase().includes(searchText)
-            );
-            
-            if (filteredGuests.length > 0) {
-                searchResults.style.display = 'block';
-                filteredGuests.forEach(guest => {
-                    const div = document.createElement('div');
-                    div.className = 'search-result-item';
-                    div.textContent = guest;
-                    div.addEventListener('click', () => {
-                        selectGuest(guest);
-                    });
-                    searchResults.appendChild(div);
+        // Обработка выбора гостя
+        document.getElementById('guest-select').addEventListener('change', function() {
+            const guestName = this.value;
+            if (guestName) {
+                document.getElementById('guest-name').textContent = guestName;
+                document.getElementById('invitation-preview').style.display = 'block';
+                
+                // Прокручиваем к приглашению
+                document.getElementById('invitation-preview').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
                 });
             } else {
-                searchResults.style.display = 'none';
-            }
-        });
-        
-        // Выбор гостя
-        function selectGuest(name) {
-            guestSearch.value = name;
-            searchResults.style.display = 'none';
-            guestName.textContent = name;
-            invitationPreview.style.display = 'block';
-            
-            // Обновляем текст кнопки в зависимости от того, пара это или один человек
-            if (name.includes(' и ')) {
-                confirmBtn.textContent = 'Мы придем!';
-            } else {
-                confirmBtn.textContent = 'Я приду!';
-            }
-            
-            // Прокручиваем к приглашению
-            invitationPreview.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Закрытие результатов поиска при клике вне области
-        document.addEventListener('click', function(e) {
-            if (!guestSearch.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.style.display = 'none';
-            }
-        });
-        
-        // Функция сохранения приглашения
-        function saveInvitation() {
-            const invitationElement = document.getElementById('invitation-preview');
-            
-            html2canvas(invitationElement).then(function(canvas) {
-                const link = document.createElement('a');
-                link.download = 'Приглашение на свадьбу.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-        
-        // Отправка подтверждения в Telegram
-        confirmBtn.addEventListener('click', async function() {
-            const guest = guestName.textContent;
-            const wishes = document.getElementById('wishes').value || 'Пожелания не указаны';
-            
-            // Получаем информацию о браузере и устройстве
-            const browserInfo = navigator.userAgent;
-            const deviceInfo = `${navigator.platform}, ${navigator.language}`;
-            
-            // Получаем IP-адрес
-            let ip = 'Не удалось определить';
-            try {
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                ip = ipData.ip;
-            } catch (error) {
-                console.error('Ошибка получения IP:', error);
-            }
-            
-            // Формируем сообщение для Telegram
-            const message = `Новое подтверждение на свадьбу!\n\nГость: ${guest}\nIP: ${ip}\nБраузер: ${browserInfo}\nУстройство: ${deviceInfo}\nПожелания: ${wishes}`;
-            
-            // Отправляем сообщение в Telegram
-            const botToken = '8496121433:AAF-VGKTdlTrGYZmo4p7N1BA1cYNzWgPmxA';
-            const chatId = '241984026';
-            
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: message
-                    })
-                });
-                
-                if (response.ok) {
-                    // Показываем уведомление об успехе
-                    notification.style.display = 'block';
-                    notification.style.background = '#4caf50';
-                    notification.textContent = 'Ваш ответ успешно отправлен!';
-                    
-                    setTimeout(() => {
-                        notification.style.display = 'none';
-                    }, 3000);
-                } else {
-                    throw new Error('Ошибка отправки сообщения');
-                }
-            } catch (error) {
-                console.error('Ошибка:', error);
-                notification.style.display = 'block';
-                notification.style.background = '#f44336';
-                notification.textContent = 'Ошибка отправки. Попробуйте еще раз.';
-                
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 3000);
+                document.getElementById('invitation-preview').style.display = 'none';
             }
         });
     </script>
