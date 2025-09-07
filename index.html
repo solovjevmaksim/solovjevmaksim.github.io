@@ -135,22 +135,52 @@
             animation: fadeIn 2s ease;
         }
         
-        select {
+        .search-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        #guest-search {
             padding: 12px 20px;
             border: 1px solid #d4a8a0;
             border-radius: 8px;
             font-size: 1rem;
             background: white;
             color: #4a3c3c;
-            width: 300px;
-            max-width: 100%;
+            width: 100%;
             outline: none;
             transition: all 0.3s ease;
         }
         
-        select:focus {
+        #guest-search:focus {
             border-color: #a76d60;
             box-shadow: 0 0 0 2px rgba(167, 109, 96, 0.2);
+        }
+        
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+        
+        .search-result-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .search-result-item:hover {
+            background: #f8f0f0;
         }
         
         .invitation-preview {
@@ -174,7 +204,22 @@
             color: #a76d60;
         }
         
-        .save-btn {
+        .confirmation-form {
+            margin-top: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4a8a0;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 15px;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .save-btn, .confirm-btn {
             background: #a76d60;
             color: white;
             border: none;
@@ -183,10 +228,10 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background 0.3s ease;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         
-        .save-btn:hover {
+        .save-btn:hover, .confirm-btn:hover {
             background: #8c5b50;
         }
         
@@ -218,6 +263,19 @@
             padding: 20px;
             color: #7c5c5c;
             font-size: 0.9rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
         }
         
         /* Анимации */
@@ -305,33 +363,26 @@
         </div>
         
         <div class="guest-selector">
-            <h3>Выберите гостя для персонализированного приглашения</h3>
-            <select id="guest-select">
-                <option value="">-- Выберите гостя --</option>
-                <option value="Дмитрий">Дмитрий</option>
-                <option value="Мария">Мария</option>
-                <option value="Александр">Александр</option>
-                <option value="Елизавета">Елизавета</option>
-                <option value="Алексей">Алексей</option>
-                <option value="Анастасия">Анастасия</option>
-                <option value="Сергей">Сергей</option>
-                <option value="Мария">Мария</option>
-                <option value="Максим и Анна">Максим и Анна</option>
-                <option value="Антон и Татьяна">Антон и Татьяна</option>
-                <option value="Дмитрий и Маргарита">Дмитрий и Маргарита</option>
-                <option value="Екатерина">Екатерина</option>
-            </select>
+            <h3>Найдите себя в списке гостей</h3>
+            <div class="search-container">
+                <input type="text" id="guest-search" placeholder="Начните вводить ваше имя...">
+                <div id="search-results"></div>
+            </div>
         </div>
         
         <div class="invitation-preview" id="invitation-preview">
-            <h3>Приглашение</h3>
+            <h3>Персональное приглашение</h3>
             <p>Дорогой(ая) <span id="guest-name"></span>!</p>
             <p>Мы будем счастливы видеть вас на нашей свадьбе</p>
             <p>25 октября 2025 года</p>
             <p>Церемония: Октябрьский отдел ЗАГС, Гожувская ул., 40 в 10:00</p>
             <p>Банкет: Гостевой домик «Это база», Октябрьская ул., 17, р.п. Луховка в 15:00</p>
-            <p>С любовью, Алина и Максим</p>
-            <button class="save-btn" onclick="saveInvitation()">Сохранить приглашение</button>
+            
+            <div class="confirmation-form">
+                <textarea id="wishes" placeholder="Ваши пожелания молодоженам..."></textarea>
+                <button class="confirm-btn" id="confirm-btn">Я приду!</button>
+                <button class="save-btn" onclick="saveInvitation()">Сохранить приглашение</button>
+            </div>
         </div>
         
         <footer>
@@ -339,15 +390,85 @@
         </footer>
     </div>
 
+    <div class="notification" id="notification">
+        Ваш ответ успешно отправлен!
+    </div>
+
     <script>
-        // Обработка выбора гостя
-        document.getElementById('guest-select').addEventListener('change', function() {
-            var guestName = this.value;
-            if (guestName) {
-                document.getElementById('guest-name').textContent = guestName;
-                document.getElementById('invitation-preview').style.display = 'block';
+        // Список гостей (одиночные и пары)
+        const guests = [
+            "Дмитрий",
+            "Мария", 
+            "Александр",
+            "Александр и Елизавета",
+            "Алексей и Анастасия",
+            "Сергей и Мария",
+            "Максим и Анна",
+            "Антон и Татьяна",
+            "Дмитрий и Маргарита",
+            "Екатерина"
+        ];
+        
+        // Элементы DOM
+        const guestSearch = document.getElementById('guest-search');
+        const searchResults = document.getElementById('search-results');
+        const invitationPreview = document.getElementById('invitation-preview');
+        const guestName = document.getElementById('guest-name');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const notification = document.getElementById('notification');
+        
+        // Поиск гостей
+        guestSearch.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if (searchText.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const filteredGuests = guests.filter(guest => 
+                guest.toLowerCase().includes(searchText)
+            );
+            
+            if (filteredGuests.length > 0) {
+                searchResults.style.display = 'block';
+                filteredGuests.forEach(guest => {
+                    const div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    div.textContent = guest;
+                    div.addEventListener('click', () => {
+                        selectGuest(guest);
+                    });
+                    searchResults.appendChild(div);
+                });
             } else {
-                document.getElementById('invitation-preview').style.display = 'none';
+                searchResults.style.display = 'none';
+            }
+        });
+        
+        // Выбор гостя
+        function selectGuest(name) {
+            guestSearch.value = name;
+            searchResults.style.display = 'none';
+            guestName.textContent = name;
+            invitationPreview.style.display = 'block';
+            
+            // Обновляем текст кнопки в зависимости от того, пара это или один человек
+            if (name.includes(' и ')) {
+                confirmBtn.textContent = 'Мы придем!';
+            } else {
+                confirmBtn.textContent = 'Я приду!';
+            }
+            
+            // Прокручиваем к приглашению
+            invitationPreview.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Закрытие результатов поиска при клике вне области
+        document.addEventListener('click', function(e) {
+            if (!guestSearch.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
             }
         });
         
@@ -362,6 +483,68 @@
                 link.click();
             });
         }
+        
+        // Отправка подтверждения в Telegram
+        confirmBtn.addEventListener('click', async function() {
+            const guest = guestName.textContent;
+            const wishes = document.getElementById('wishes').value || 'Пожелания не указаны';
+            
+            // Получаем информацию о браузере и устройстве
+            const browserInfo = navigator.userAgent;
+            const deviceInfo = `${navigator.platform}, ${navigator.language}`;
+            
+            // Получаем IP-адрес
+            let ip = 'Не удалось определить';
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                ip = ipData.ip;
+            } catch (error) {
+                console.error('Ошибка получения IP:', error);
+            }
+            
+            // Формируем сообщение для Telegram
+            const message = `Новое подтверждение на свадьбу!\n\nГость: ${guest}\nIP: ${ip}\nБраузер: ${browserInfo}\nУстройство: ${deviceInfo}\nПожелания: ${wishes}`;
+            
+            // Отправляем сообщение в Telegram
+            const botToken = '8496121433:AAF-VGKTdlTrGYZmo4p7N1BA1cYNzWgPmxA';
+            const chatId = '241984026';
+            
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message
+                    })
+                });
+                
+                if (response.ok) {
+                    // Показываем уведомление об успехе
+                    notification.style.display = 'block';
+                    notification.style.background = '#4caf50';
+                    notification.textContent = 'Ваш ответ успешно отправлен!';
+                    
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error('Ошибка отправки сообщения');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                notification.style.display = 'block';
+                notification.style.background = '#f44336';
+                notification.textContent = 'Ошибка отправки. Попробуйте еще раз.';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        });
     </script>
 </body>
 </html>
